@@ -1,0 +1,48 @@
+/* Dashboard.css */
+.dashboard {
+  font-family: sans-serif;
+  height: 100vh; /* กำหนดความสูงเป็น 100% ของ Viewport Height */
+  width: 100vw; /* กำหนดความกว้างเป็น 100% ของ Viewport Width */
+  display: flex;
+  flex-direction: column;
+  background-color: #B4EBE6;
+}
+
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header .menu button {
+    margin-top: 30px;
+    margin-left: -50px;
+    margin-right: 100px;
+    padding: 10px 16px;
+    border: none;
+    background-color: #80CBC4;
+    cursor: pointer;
+    color: #000000;
+  }
+  
+  
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* เพิ่มขนาด minmax */
+    gap: 15px; /* ปรับขนาด gap */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px 16px;
+  }
+  .profile-image {
+    width: 150px; /* กำหนดขนาดรูปภาพ */
+    height: 150px;
+    border-radius: 50%; /* ทำให้รูปภาพเป็นวงกลม */
+    object-fit: cover; /* ปรับขนาดรูปภาพให้พอดีกับ Container */
+    margin-top: 30px;
+    margin-left: 80px;
+    margin-right: 20px;
+    padding: 10px 16px;
+  }
