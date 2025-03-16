@@ -1,13 +1,57 @@
-// App.jsx
-import React from 'react';
-import Dashboard from './components/Dashboard.jsx'; // Import Component Dashboard
+// import React from 'react';
+// import Dashboard from './components/Dashboard.jsx'; // Import Component Dashboard
 
+
+// function App() {
+//   return (
+//     <div>
+//       <Dashboard /> {/* Render Component Dashboard */}
+//     </div>
+//   );
+// }
+
+// export default App;
+
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import './App.css';
+import Dashboard from './components/Dashboard';
+import Home from './components/Home';
+import Profile from './components/Profile';
+import Setting from './components/Setting';
+import InfoTemp from './components/InfoTemp'; // เพิ่ม import InfoTemp
+import profileImage from './assets/Picture/Logo.png';
 
 function App() {
   return (
-    <div>
-      <Dashboard /> {/* Render Component Dashboard */}
-    </div>
+    <Router>
+      <div className="app-container">
+        <header>
+        <Link to="/home" >
+          <div className="logo">
+            <img src={profileImage} alt="Logo" />
+          </div>
+          </Link>
+          <nav>
+            <Link to="/home" className="nav-link">Home</Link>
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+            <Link to="/profile" className="nav-link">Profile</Link>
+            <Link to="/setting" className="nav-link">Setting</Link>
+          </nav>
+        </header>
+        
+        <main>
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/info-temp" element={<InfoTemp />} /> {/* เพิ่ม Route InfoTemp */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 

@@ -1,4 +1,4 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -40,8 +40,94 @@
 .read-the-docs {
   color: #888;
 }
-/* App.css */
+
 .App {
   font-family: sans-serif;
   text-align: center;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Kanit', sans-serif;
+}
+
+body {
+  background-color: #b7eae4;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 120px;
+  width: 120px;
+  object-fit: contain;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-link {
+  padding: 10px 30px;
+  text-decoration: none;
+  color: #333;
+  background-color: #ffffff;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  
+}
+
+.nav-link:hover {
+  background-color: #a0d8d2;
+}
+
+
+main {
+  min-height: 80vh;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .logo {
+    margin-bottom: 10px;
+    
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .nav-link {
+    flex: 1;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 14px;
+  }
 }

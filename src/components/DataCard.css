@@ -1,29 +1,29 @@
-.data-card {
+/* .data-card {
   background-color: #FBF8EF;
   padding: 10px;
   border-radius: 10px;
   text-align: left;
   display: flex;
   flex-direction: column;
-  width: 200px; /* กำหนด width */
-  height: 100px; /* กำหนด height */
+  width: 200px; 
+  height: 100px; 
 }
 
 .data-card .card-title {
   font-size: 1.0em;
-  margin-bottom: 20px; /* ลด margin */
-  text-align: center; /* จัด title ให้อยู่ตรงกลาง */
+  margin-bottom: 20px; 
+  text-align: center; 
   color: #000000;
 }
 
 .data-card .card-info {
-  display: flex; /* ใช้ Flexbox เพื่อจัดวาง value และ date */
-  justify-content: space-between; /* จัดวาง value และ date ให้ชิดซ้ายและขวา */
-  align-items: center; /* จัดให้ value และ date อยู่กึ่งกลางแนวตั้ง */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
 }
 
 .data-card .card-value {
-  font-size: 0.8em; /* ปรับขนาด font */
+  font-size: 0.8em; 
   background-color: #FFB433;
   border-radius: 10px;
   color: #000000;
@@ -33,10 +33,10 @@
 }
 
 .data-card .card-date {
-  font-size: 0.8em; /* ปรับขนาด font */
+  font-size: 0.8em; 
   color: #000000;
   background-color: #B4EBE6;
   border-radius: 10px;
   padding: 5px; 
   padding-left:30px;
-}
+} */
