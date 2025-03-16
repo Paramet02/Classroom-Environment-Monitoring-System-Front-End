@@ -55,21 +55,23 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <div className="top-cards">
-      <Link to="/info-temp" className="card-link"> {/* เพิ่ม Link */}
-        <button className="card">
-          <h3>ความชื้น</h3>
-          <div className="card-content">
-            <div className="value">60%</div>
-            <div className="date">{date}</div>
-          </div>
-        </button>
-        <button className="card">
-          <h3>อุณหภูมิ</h3>
-          <div className="card-content">
-            <div className="value">28°</div>
-            <div className="date">{date}</div>
-          </div>
-        </button>
+        <Link to={{ pathname: "/info-temp", search: "?parameter=ความชื้น" }} className="card-link">
+          <button className="card">
+            <h3>ความชื้น</h3>
+            <div className="card-content">
+              <div className="value">60%</div>
+              <div className="date">{date}</div>
+            </div>
+          </button>
+        </Link>
+        <Link to={{ pathname: "/info-temp", search: "?parameter=อุณหภูมิ" }} className="card-link">
+          <button className="card">
+            <h3>อุณหภูมิ</h3>
+            <div className="card-content">
+              <div className="value">28°</div>
+              <div className="date">{date}</div>
+            </div>
+          </button>
         </Link>
       </div>
       <div className="parameters-grid">

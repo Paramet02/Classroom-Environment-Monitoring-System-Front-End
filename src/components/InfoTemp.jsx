@@ -35,6 +35,10 @@ function InfoTemp() {
   // ฟังก์ชันสร้างข้อมูลตาม parameter
   function generateData(param) {
     switch (param) {
+      case 'ความชื้น':
+        return [55, 60, 65, 62, 68, 70, 69, 67, 65];
+      case 'อุณหภูมิ':
+        return [25, 28, 30, 29, 31, 32, 31, 30, 28];
       case 'PM2.5':
         return [30, 35, 40, 38, 42, 45, 43, 41, 39];
       case 'PM10':
@@ -59,7 +63,7 @@ function InfoTemp() {
   return (
     <div className="info-temp-container">
       <div className="info-temp-card">
-        <h2>{parameter}</h2> {/* แสดงชื่อ parameter */}
+        <h2>{parameter}</h2>
         <Line data={data} options={options} />
       </div>
     </div>

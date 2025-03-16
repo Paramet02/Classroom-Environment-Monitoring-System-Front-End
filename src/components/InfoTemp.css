@@ -2,7 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    padding-left: 200px;
+    height: 60vh; 
+    width: 90vw; 
     background-color: #b7eae4;
   }
   
@@ -18,4 +20,5 @@
   .info-temp-card h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #000;
   }
