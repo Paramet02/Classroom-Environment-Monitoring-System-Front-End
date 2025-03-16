@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/Dashboard';
@@ -34,7 +34,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/info-temp" element={<InfoTemp />} /> {/* เพิ่ม Route InfoTemp */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/Home" replace />} />
           </Routes>
         </main>
       </div>

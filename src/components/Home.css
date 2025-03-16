@@ -1,0 +1,73 @@
+.home-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80vh;
+    background-color: #b7eae4;
+  }
+  
+  .left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 20px;
+  }
+  
+  .welcome-text {
+    font-size: 2em;
+    color: #333;
+  }
+  
+  .right-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .forecast-card {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+  }
+  
+  .forecast-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #333;
+  }
+  
+  .forecast-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .weather-icon {
+    font-size: 30px; /* กำหนดขนาดไอคอน */
+    margin-right: 15px;
+    color: #666; /* กำหนดสีไอคอน */
+  }
+  
+  .forecast-details {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .temperature {
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  .day {
+    padding-left: 10px;
+    color: #666;
+  }
