@@ -1,17 +1,3 @@
-// import React from 'react';
-// import Dashboard from './components/Dashboard.jsx'; // Import Component Dashboard
-
-
-// function App() {
-//   return (
-//     <div>
-//       <Dashboard /> {/* Render Component Dashboard */}
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import './App.css';
@@ -25,8 +11,8 @@ import profileImage from './assets/Picture/Logo.png';
 function App() {
   return (
     <Router>
-      <div className="app-container">
-        <header>
+      <div className="Bar-Header">
+      <header>
         <Link to="/home" >
           <div className="logo">
             <img src={profileImage} alt="Logo" />
@@ -39,7 +25,8 @@ function App() {
             <Link to="/setting" className="nav-link">Setting</Link>
           </nav>
         </header>
-        
+      </div>
+      <div className="app-container">
         <main>
           <Routes>
             <Route path="/home" element={<Home />} />
