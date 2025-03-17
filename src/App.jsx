@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import './App.css';
+import Dashboard from './components/Dashboard';
+import Home from './components/Home';
+import Profile from './components/Profile';
+import Setting from './components/Setting';
+import InfoTemp from './components/InfoTemp'; // เพิ่ม import InfoTemp
+import profileImage from './assets/Picture/Logo.png';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="Bar-Header">
+      <header>
+        <Link to="/home" >
+          <div className="logo">
+            <img src={profileImage} alt="Logo" />
+          </div>
+          </Link>
+          <nav>
+            <Link to="/home" className="nav-link">Home</Link>
+            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+            <Link to="/profile" className="nav-link">Profile</Link>
+            <Link to="/setting" className="nav-link">Setting</Link>
+          </nav>
+        </header>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="app-container">
+        <main>
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/info-temp" element={<InfoTemp />} /> {/* เพิ่ม Route InfoTemp */}
+            <Route path="/" element={<Navigate to="/Home" replace />} />
+          </Routes>
+        </main>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

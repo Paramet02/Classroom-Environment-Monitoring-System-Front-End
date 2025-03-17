@@ -1,0 +1,26 @@
+.info-temp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: -10px;
+    padding-right: 200px;
+    height: 60vh; 
+    width: 90vw; 
+    background-color: #b7eae4;
+    margin-top: 50px;
+  }
+  
+  .info-temp-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 10px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 800px;
+  }
+  
+  .info-temp-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #000;
+  }
