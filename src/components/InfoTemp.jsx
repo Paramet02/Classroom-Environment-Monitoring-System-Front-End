@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './InfoTemp.css';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
-import { useLocation } from 'react-router-dom'; // เพิ่ม import useLocation
+import { useLocation } from 'react-router-dom';
 Chart.register(...registerables);
 
 function InfoTemp() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const parameter = searchParams.get('parameter');
+  const [timeRange, setTimeRange] = useState('10hour'); // ค่าเริ่มต้นเป็น 10hour
 
-  // สร้างข้อมูลกราฟตาม parameter
+  // สร้างข้อมูลกราฟตาม parameter และช่วงเวลา
   const data = {
-    labels: ['00:00', '00:30', '01:00', '06:20', '07:00', '07:30', '08:30', '09:00', '10:00'],
+    labels: getLabels(timeRange),
     datasets: [
       {
-        label: parameter, // ใช้ parameter เป็น label
-        data: generateData(parameter), // สร้างข้อมูลตาม parameter
+        label: parameter,
+        data: generateData(parameter, timeRange),
         fill: false,
         borderColor: 'navy',
         tension: 0.1,
@@ -32,38 +33,64 @@ function InfoTemp() {
     },
   };
 
-  // ฟังก์ชันสร้างข้อมูลตาม parameter
-  function generateData(param) {
-    switch (param) {
-      case 'ความชื้น':
-        return [55, 60, 65, 62, 68, 70, 69, 67, 65];
-      case 'อุณหภูมิ':
-        return [25, 28, 30, 29, 31, 32, 31, 30, 28];
-      case 'PM2.5':
-        return [30, 35, 40, 38, 42, 45, 43, 41, 39];
-      case 'PM10':
-        return [45, 50, 55, 52, 58, 60, 59, 57, 55];
-      case 'PM1':
-        return [12, 15, 18, 16, 20, 22, 21, 19, 17];
-      case 'CO':
-        return [2, 3, 4, 3.5, 4.5, 5, 4.8, 4.6, 4.4];
-      case 'NO2':
-        return [140, 150, 160, 155, 165, 170, 168, 166, 164];
-      case 'CO2':
-        return [550, 600, 650, 620, 680, 700, 690, 670, 650];
-      case 'TVOC':
-        return [450, 500, 550, 520, 580, 600, 590, 570, 550];
-      case 'O3':
-        return [75, 80, 85, 82, 88, 90, 89, 87, 85];
+  // ฟังก์ชันสร้าง labels ตามช่วงเวลา
+  function getLabels(range) {
+    const now = new Date();
+    const labels = [];
+    let hours;
+
+    switch (range) {
+      case '6hour':
+        hours = 6;
+        break;
+      case '8hour':
+        hours = 8;
+        break;
       default:
-        return [];
+        hours = 10;
     }
+
+    for (let i = hours; i >= 0; i--) {
+      const time = new Date(now.getTime() - i * 60 * 60 * 1000);
+      labels.push(`${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`);
+    }
+    return labels;
+  }
+
+  // ฟังก์ชันสร้างข้อมูลตาม parameter และช่วงเวลา
+  function generateData(param, range) {
+    const hours = range === '6hour' ? 6 : range === '8hour' ? 8 : 10;
+    const baseData = {
+      'ความชื้น': [55, 60, 65, 62, 68, 70, 69, 67, 65, 63],
+      'อุณหภูมิ': [25, 28, 30, 29, 31, 32, 31, 30, 28, 27],
+      'PM2.5': [30, 35, 40, 38, 42, 45, 43, 41, 39, 37],
+      'PM10': [45, 50, 55, 52, 58, 60, 59, 57, 55, 53],
+      'PM1': [12, 15, 18, 16, 20, 22, 21, 19, 17, 16],
+      'CO': [2, 3, 4, 3.5, 4.5, 5, 4.8, 4.6, 4.4, 4.2],
+      'NO2': [140, 150, 160, 155, 165, 170, 168, 166, 164, 162],
+      'CO2': [550, 600, 650, 620, 680, 700, 690, 670, 650, 630],
+      'TVOC': [450, 500, 550, 520, 580, 600, 590, 570, 550, 530],
+      'O3': [75, 80, 85, 82, 88, 90, 89, 87, 85, 83],
+    };
+
+    const selectedData = baseData[param].slice(0, hours + 1);
+    return selectedData;
   }
 
   return (
     <div className="info-temp-container">
+      <div className="info-temp-header"> {/* เพิ่ม header container */}
+        <h2>Latest Readings</h2>
+        <div classname="Select">
+        <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>
+          <option value="6hour">6 Hours</option>
+          <option value="8hour">8 Hours</option>
+          <option value="10hour">10 Hours</option>
+        </select>
+        </div>
+      </div>
       <div className="info-temp-card">
-        <h2>{parameter}</h2>
+        <h3>{parameter}</h3>
         <Line data={data} options={options} />
       </div>
     </div>
