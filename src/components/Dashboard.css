@@ -116,14 +116,14 @@
 
   .dashboard-container {
     display: flex;
-    height: 100vh;
+    height: 500vh;
     width: 210vh;
-    background-color: #FFFF;
+    background-color: #ffff;
   }
   
   .sidebar {
     width: 200px;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
     padding: 20px;
   }
   
@@ -133,17 +133,19 @@
     padding: 10px;
     margin-bottom: 30px;
     border: none;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
     cursor: pointer;
     color: #000;
   }
-  .page button{
-    background-color: #E9EAFF;
+  
+  .page button {
+    background-color: #e9eaff;
   }
+  
   .sidebar-logo {
-    width: 150px; 
-    height: 150px; 
-    margin-bottom: 20px; 
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
     margin-left: 30px;
   }
   
@@ -153,14 +155,17 @@
   }
   
   .aqi-card {
-    background-image: url('../assets/Picture/lightcloud.gif'); 
-  background-repeat: no-repeat; 
-  background-size: cover;
+    background-image: url('../assets/Picture/sky.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
   }
-  
+  .Header {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
   .aqi-title {
     padding-left: 20px;
     display: flex;
@@ -171,6 +176,7 @@
   }
   
   .aqi-details {
+    display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
@@ -178,24 +184,20 @@
   }
   
   .aqi-value-container {
-    border-radius: 20px;
-    margin-bottom: 30px;
-    background: linear-gradient(to bottom, #ffffff18, #ffc2c16c);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    justify-content: space-between;
-    margin-left: 50px;
-    margin-right: 800px;
-    padding-bottom: 20px;
+    margin-right: 20px;
+    margin-left: 400px;
   }
+  
   .aqi-quality-container {
-    border-radius: 20px;
-    margin-bottom: 30px;
-    background: linear-gradient(to bottom, #ffffff18, #ffc2c16c);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    justify-content: space-between;
-    margin-left: 800px;
-    margin-right:100px;
-    padding-bottom: 20px;
+    margin-right: 400px;
   }
   
   .aqi-label {
@@ -208,13 +210,13 @@
   .aqi-value {
     font-size: 48px;
     font-weight: bold;
-    color: #e53935; /* สีแดงสำหรับค่า AQI สูง */
+    color: #e53935;
   }
   
   .aqi-quality {
-    font-size: 24px;
+    font-size: 40px;
     font-weight: bold;
-    color: #e53935; /* สีแดงสำหรับคุณภาพอากาศแย่ */
+    color: #e53935;
   }
   
   .aqi-icon {
@@ -227,7 +229,7 @@
   
   .aqi-scale-bar {
     display: flex;
-    height: 45px;
+    height: 40px;
     border-radius: 10px;
     overflow: hidden;
   }
@@ -242,7 +244,7 @@
   }
   
   .aqi-scale-segment.good {
-    background-color: #4caf50;
+    background-color: #53FB72;
   }
   
   .aqi-scale-segment.moderate {
@@ -277,25 +279,48 @@
   .aqi-display {
     padding: 20px;
     border-radius: 8px;
+    margin-top: 50px;
     margin-bottom: 20px;
   }
   
   .aqi-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+    margin-right: 200px;
+    margin-left: 230px;
   }
   
   .aqi-box {
     background-color: #e0e0e0;
-    padding: 10px;
-    border-radius: 5px;
-    width: 23%; /* ปรับความกว้างให้เหมาะสม */
+    padding: 30px;
+    border-radius: 10px;
+    width: 23%;
     text-align: center;
+    color: #000;
+    font-weight: bold;
+    border: solid;
+    border-left-color: #414141;
+    border-left-width: 15px;
+    border-top-color: #e0e0e000;
+    border-bottom-color: #e0e0e000;
+    border-right-color: #e0e0e000;
+    margin-right: 30px;
+    
   }
   
-  .graph-display {
-    background-color: #f8f8f8;
-    padding: 20px;
-    border-radius: 8px;
+  .graph-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
   }
+  
+  .graph-controls > div {
+    margin-left: 10px;
+  }
+  .aqi-display .chart-container {
+    width: 80%; /* ปรับขนาดความกว้างให้ใหญ่ขึ้น (80% ของ container) */
+    height: 400px; /* ปรับขนาดความสูง */
+    margin: 20px auto; /* จัดกึ่งกลางแนวนอน และเพิ่มระยะห่างด้านบนและด้านล่าง */
+  }
+  
