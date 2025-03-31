@@ -1,4 +1,4 @@
-.dashboard {
+/* .dashboard {
     padding: 20px 0;
     height: 100vh; 
   width: 90vw; 
@@ -104,11 +104,198 @@
     }
   }
   .card-link {
-    text-decoration: none; /* เอาเส้นใต้ลิงก์ออก */
+    text-decoration: none; 
     flex: 1;
   }
   .parameter-link {
     text-decoration: none;
     flex: 1;
     
+  } */
+
+
+  .dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 210vh;
+    background-color: #FFFF;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #F5F5F5;
+    padding: 20px;
+  }
+  
+  .sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 30px;
+    border: none;
+    background-color: #F5F5F5;
+    cursor: pointer;
+    color: #000;
+  }
+  .page button{
+    background-color: #E9EAFF;
+  }
+  .sidebar-logo {
+    width: 150px; 
+    height: 150px; 
+    margin-bottom: 20px; 
+    margin-left: 30px;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .aqi-card {
+    background-image: url('../assets/Picture/lightcloud.gif'); 
+  background-repeat: no-repeat; 
+  background-size: cover;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .aqi-title {
+    padding-left: 20px;
+    display: flex;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000;
+  }
+  
+  .aqi-details {
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #000;
+  }
+  
+  .aqi-value-container {
+    border-radius: 20px;
+    margin-bottom: 30px;
+    background: linear-gradient(to bottom, #ffffff18, #ffc2c16c);
+    text-align: center;
+    justify-content: space-between;
+    margin-left: 50px;
+    margin-right: 800px;
+    padding-bottom: 20px;
+  }
+  .aqi-quality-container {
+    border-radius: 20px;
+    margin-bottom: 30px;
+    background: linear-gradient(to bottom, #ffffff18, #ffc2c16c);
+    text-align: center;
+    justify-content: space-between;
+    margin-left: 800px;
+    margin-right:100px;
+    padding-bottom: 20px;
+  }
+  
+  .aqi-label {
+    font-weight: bold;
+    font-size: 16px;
+    padding-right: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .aqi-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #e53935; /* สีแดงสำหรับค่า AQI สูง */
+  }
+  
+  .aqi-quality {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e53935; /* สีแดงสำหรับคุณภาพอากาศแย่ */
+  }
+  
+  .aqi-icon {
+    font-size: 36px;
+  }
+  
+  .aqi-scale {
+    margin-top: 20px;
+  }
+  
+  .aqi-scale-bar {
+    display: flex;
+    height: 45px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .aqi-scale-segment {
+    flex: 1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+  }
+  
+  .aqi-scale-segment.good {
+    background-color: #4caf50;
+  }
+  
+  .aqi-scale-segment.moderate {
+    background-color: #ffeb3b;
+  }
+  
+  .aqi-scale-segment.poor {
+    background-color: #ff9800;
+  }
+  
+  .aqi-scale-segment.unhealthy {
+    background-color: #f640d4;
+  }
+  
+  .aqi-scale-segment.severe {
+    background-color: #9c27b0;
+  }
+  
+  .aqi-scale-segment.hazardous {
+    background-color: #f44336;
+  }
+  
+  .aqi-scale-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #000;
+    font-weight: bold;
+  }
+  
+  .aqi-display {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .aqi-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .aqi-box {
+    background-color: #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+    width: 23%; /* ปรับความกว้างให้เหมาะสม */
+    text-align: center;
+  }
+  
+  .graph-display {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
   }

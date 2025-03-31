@@ -1,6 +1,6 @@
-.info-temp-container {
+/* .info-temp-container {
   display: flex;
-  flex-direction: column; /* เปลี่ยนเป็น column เพื่อจัด header และ card ในแนวตั้ง */
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
   height: 60vh;
@@ -10,7 +10,7 @@
 }
 
 .info-temp-header {
-  /* สไตล์สำหรับ header container */
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,4 +58,4 @@
   text-align: center;
   margin-bottom: 20px;
   color: #000;
-}
+} */
