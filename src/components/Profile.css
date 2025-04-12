@@ -31,7 +31,15 @@
     text-align: center;
   }
   
-    .page button {
+.page button {
       background-color: #e9eaff;
-    }
- 
+}
+ .logout-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logout-button button{
+  background-color: #e9eaff;
+  color: rgb(2, 2, 2);
+}
