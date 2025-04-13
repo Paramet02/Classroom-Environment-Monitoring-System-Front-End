@@ -1,5 +1,5 @@
 /* Login.css */
-.login-container {
+/* .login-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,9 +10,7 @@
     background-color: #f4f4f4;
   }
 
-  .form-container{
-    
-  }
+  
   
   h2 {
     margin-bottom: 20px;
@@ -96,4 +94,11 @@
     cursor: pointer;
     font-size: inherit;
     text-decoration: underline;
+  } */
+
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: aliceblue;
   }
