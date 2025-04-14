@@ -51,6 +51,7 @@ import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Home from './components/Home';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import './App.css';
 
 function App() {
@@ -58,11 +59,12 @@ function App() {
     <Router>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} /> {/* เปลี่ยนเส้นทางหน้าแรกเป็น /dashboard */}
+          <Route path="/" element={<Navigate to="/signup" replace />} /> {/* เปลี่ยนเส้นทางหน้าแรกเป็น /dashboard */}
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/signup" element={<Signup />} />
           
         </Routes>
       </div>
