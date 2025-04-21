@@ -112,7 +112,7 @@ function Sidebar() {
       </div>
       <button onClick={() => navigate("/dashboard")}>Dashboards</button>
       <button onClick={() => navigate("/profile")}>Profile</button>
-      <button>Settings</button>
+      <button onClick={() => navigate("/setting")}>Settings</button>
     </div>
   );
 }

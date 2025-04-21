@@ -16,8 +16,8 @@ function Profile() {
           <div className="profile-logo-container">
             <img src={profileimage} alt="Logo" className="profile-logo" />
           </div>
-          <h1 className="profile-title">Hello Veraphon</h1>
-          <h2 className="profile-email">Email: Veraphon1@gmail.com</h2>
+          <p className="profile-title">Hello Veraphon</p>
+          <p className="profile-email">Email: Veraphon1@gmail.com</p>
         </div>
         <div className="logout-button">
         <button onClick={() => navigate("/login")}>Logout</button>
@@ -39,7 +39,7 @@ function Sidebar() {
       <div className="page">
       <button onClick={() => navigate("/profile")}>Profile</button>
       </div>
-      <button>Settings</button>
+      <button onClick={() => navigate("/setting")}>Settings</button>
     </div>
   );
 }

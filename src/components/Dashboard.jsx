@@ -821,7 +821,7 @@ function Sidebar() {
         <button>Dashboards</button>
       </div>
       <button onClick={() => navigate("/profile")}>Profile</button>
-      <button onClick={() => navigate("/setting")}>Setting</button>
+      <button onClick={() => navigate("/setting")}>Settings</button>
     </div>
   );
 }
@@ -932,23 +932,6 @@ function AQIDisplay({
     }),
   };
 
-  const getColor = (value) => {
-    if (value >= 0 && value <= 50) {
-      return "rgba(83, 251, 114, 0.2)"; // เขียว
-    } else if (value > 50 && value <= 100) {
-      return "rgba(255, 235, 59, 0.2)"; // เหลือง
-    } else if (value > 100 && value <= 150) {
-      return " rgba(255, 152, 0, 0.2)"; // ส้ม
-    } else if (value > 150 && value <= 200) {
-      return "rgba(246, 64, 212, 0.2)"; // ชมพู
-    } else if (value > 200 && value <= 300) {
-      return "rgba(156, 39, 176, 0.2)"; // ม่วง
-    } else if (value > 300 && value <= 500) {
-      return "rgba(244, 67, 54, 0.2)"; // แดง
-    } else {
-      return "#e0e0e0"; // สีเริ่มต้น
-    }
-  };
 
   return (
     <div className="aqi-display">
@@ -956,29 +939,29 @@ function AQIDisplay({
         <h2 className="aqi-title">มลพิษทางอากาศหลัก</h2>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(pm25) }}>
+        <div className="aqi-box" >
           <GiGasMask className="aqi-box-icon" />
           <div>PM 2.5: {pm25} µg/m³</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(pm10) }}>
+        <div className="aqi-box" >
           <GiGasMask className="aqi-box-icon" />
           <div>PM 10: {pm10} µg/m³</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(co) }}>
+        <div className="aqi-box" >
           <MdOutlineAir className="aqi-box-icon" />
           <div>CO: {co} ppm</div>
         </div>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(o3) }}>
+        <div className="aqi-box" >
           <GiChemicalDrop className="aqi-box-icon" />
           <div>O3: {o3} ppm</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(no2) }}>
+        <div className="aqi-box" >
           <GiChemicalDrop className="aqi-box-icon" />
           <div>NO2: {no2} ppm</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(so2) }}>
+        <div className="aqi-box">
           <GiChemicalDrop className="aqi-box-icon" />
           <div>SO2: {so2} ppm</div>
         </div>
@@ -989,33 +972,33 @@ function AQIDisplay({
       <div className="aqi-row">
         <div
           className="aqi-box"
-          style={{ backgroundColor: getColor(humidity) }}
+          
         >
           <WiHumidity className="aqi-box-icon" />
           <div>Humidity: {humidity} %</div>
         </div>
         <div
           className="aqi-box"
-          style={{ backgroundColor: getColor(temperature) }}
+          
         >
           <FaTemperatureHigh className="aqi-box-icon" />
           <div>Temperature: {temperature} °C</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(pm1) }}>
+        <div className="aqi-box" >
           <GiGasMask className="aqi-box-icon" />
           <div>PM 1: {pm1} µg/m³</div>
         </div>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(co2) }}>
+        <div className="aqi-box" >
           <MdCo2 className="aqi-box-icon" />
           <div>CO2: {co2} ppm</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(tvoc) }}>
+        <div className="aqi-box" >
           <ImMeter className="aqi-box-icon" />
           <div>TVOC: {tvoc} ppb</div>
         </div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(people) }}>
+        <div className="aqi-box" >
           <BsFillPeopleFill className="aqi-box-icon" />
           <div>People: {people}</div>
         </div>
