@@ -563,6 +563,8 @@ ChartJS.register(
   Legend
 );
 
+
+
 function Dashboard() {
   const [airData, setAirData] = useState(null);
   const [loading, setLoading] = useState(true);
