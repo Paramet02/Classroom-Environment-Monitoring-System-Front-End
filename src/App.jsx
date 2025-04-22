@@ -56,7 +56,7 @@ import Setting from './components/Setting';
 import Manage from './components/Manage';
 import Appset from './components/Appset';
 import Changepass from './components/Changepass';
-import Editprofile from './components/Editprofile';
+// import Editprofile from './components/Editprofile';
 
 
 import './App.css';
@@ -76,7 +76,7 @@ function App() {
           <Route path="/manage" element={<Manage />} />
           <Route path="/appset" element={<Appset />} />
           <Route path="/changepass" element={<Changepass />} />
-          <Route path="/editprofile" element={<Editprofile />} />
+          {/* <Route path="/editprofile" element={<Editprofile />} /> */}
 
           
         </Routes>
