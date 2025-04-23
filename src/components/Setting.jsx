@@ -13,7 +13,7 @@ function Setting() {
 
     const Sidebar = () => {
     return (
-      <div className="sidebar">
+      <div className="sidebar1">
         <img src={logo} alt="Logo" className="sidebar-logo" />
         <button onClick={() => navigate("/home")}>Home</button>
         <button onClick={() => navigate("/dashboard")}>Dashboards</button>

@@ -105,7 +105,7 @@ function Sidebar() {
   const navigate = useNavigate();
 
   return (
-    <div className="sidebar">
+    <div className="sidebar1">
       <img src={logo} alt="Logo" className="sidebar-logo" />
       <div className="page">
       <button onClick={() => navigate("/home")}>Home</button>

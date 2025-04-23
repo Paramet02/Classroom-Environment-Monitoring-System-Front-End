@@ -563,7 +563,44 @@ ChartJS.register(
   Legend
 );
 
+// เพิ่มฟังก์ชัน getAdviceByPrediction ลงใน Dashboard.jsx
+function getAdviceByPrediction(predictionLabel) {
+  switch (predictionLabel) {
+    case "Good":
+      return "คุณภาพอากาศอยู่ในเกณฑ์น่าพอใจและมีความเสียงเพียงเล็กน้อยหรือไม่มีเลย";
+    case "Moderate":
+      return "ผู้ที่อ่อนไหวควรหลีกเลียงกิจกรรมกลางแจ้ง เนื่องจากอาจมีอาการทางระบบทางเดินหายใจได้";
+    case "Unhealthy for Sensitive Groups":
+      return "โดยเฉพาะประชาชนทั่วไปและผู้ที่มีผิวแพ้ง่าย มีความเสียงที่จะเกิดอาการระคายเดืองและปัญหาเกี่ยวกับระบบทางเดินหายใจ";
+    case "Unhealthy":
+      return "เพิ่มความเสียงต่อการเกิดผลข้างเตียงและการระคายเคืองด่อหัวใจและปอดในประชาชนทั่วไป";
+    case "Very Unhealthy":
+      return "ประชาชนทั่วไปจะได้รับผลกระทบอย่างเห็นได้ชัด กลุ่มเสียงควรงดกิจกรรมกลางแจ้ง";
+    case "Hazardous":
+      return "ประชาชนทั่วไปมีความเสียงสูงที่จะเกิดอาการระคายเตืองและแลเสียต่อสุขภาพ ควรหลีกเลียงกิจกรรมกลางแจ้ง";
+    default:
+      return "ไม่สามารถประเมินได้";
+  }
+}
 
+// ฟังก์ชั่นสำหรับแปลงค่า AQI เป็น predictionLabel
+function getPredictionLabel(aqi) {
+  if (aqi >= 0 && aqi <= 50) {
+    return "Good";
+  } else if (aqi > 50 && aqi <= 100) {
+    return "Moderate";
+  } else if (aqi > 100 && aqi <= 150) {
+    return "Unhealthy for Sensitive Groups";
+  } else if (aqi > 150 && aqi <= 200) {
+    return "Unhealthy";
+  } else if (aqi > 200 && aqi <= 300) {
+    return "Very Unhealthy";
+  } else if (aqi > 300) {
+    return "Hazardous";
+  } else {
+    return "Unknown";
+  }
+}
 
 function Dashboard() {
   const [airData, setAirData] = useState(null);
@@ -755,6 +792,12 @@ function Dashboard() {
                 {aqiValue}
               </span>
             </div>
+            <div className="aqi-prediction">
+            <div className="aqi-advice">
+              <h3>คำแนะนำ</h3>
+              <p>{getAdviceByPrediction(getPredictionLabel(aqiValue))}</p>
+            </div>
+          </div>
             <div className="aqi-quality-container">
               <span className="aqi-label">คุณภาพอากาศคือ</span>
               <span
@@ -763,9 +806,10 @@ function Dashboard() {
               >
                 {aqiQuality}
               </span>
-              <span className="aqi-icon"></span> {/* ใช้ไอคอนแสดงอารมณ์ */}
+              <span className="aqi-icon"></span>
             </div>
           </div>
+          
           <div className="aqi-scale">
             <div className="aqi-scale-bar">
               <div className="aqi-scale-segment good">Good</div>
@@ -816,7 +860,7 @@ function Dashboard() {
 function Sidebar() {
   const navigate = useNavigate();
   return (
-    <div className="sidebar">
+    <div className="sidebar1">
       <img src={logo} alt="Logo" className="sidebar-logo" />
       <button onClick={() => navigate("/home")}>Home</button>
       <div className="page">
@@ -934,32 +978,31 @@ function AQIDisplay({
     }),
   };
 
-
   return (
     <div className="aqi-display">
       <div className="Header">
         <h2 className="aqi-title">มลพิษทางอากาศหลัก</h2>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <GiGasMask className="aqi-box-icon" />
           <div>PM 2.5: {pm25} µg/m³</div>
         </div>
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <GiGasMask className="aqi-box-icon" />
           <div>PM 10: {pm10} µg/m³</div>
         </div>
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <MdOutlineAir className="aqi-box-icon" />
           <div>CO: {co} ppm</div>
         </div>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <GiChemicalDrop className="aqi-box-icon" />
           <div>O3: {o3} ppm</div>
         </div>
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <GiChemicalDrop className="aqi-box-icon" />
           <div>NO2: {no2} ppm</div>
         </div>
@@ -972,35 +1015,29 @@ function AQIDisplay({
         <h2 className="aqi-title">มลพิษทางอากาศรอง</h2>
       </div>
       <div className="aqi-row">
-        <div
-          className="aqi-box"
-          
-        >
+        <div className="aqi-box">
           <WiHumidity className="aqi-box-icon" />
           <div>Humidity: {humidity} %</div>
         </div>
-        <div
-          className="aqi-box"
-          
-        >
+        <div className="aqi-box">
           <FaTemperatureHigh className="aqi-box-icon" />
           <div>Temperature: {temperature} °C</div>
         </div>
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <GiGasMask className="aqi-box-icon" />
           <div>PM 1: {pm1} µg/m³</div>
         </div>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <MdCo2 className="aqi-box-icon" />
           <div>CO2: {co2} ppm</div>
         </div>
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <ImMeter className="aqi-box-icon" />
           <div>TVOC: {tvoc} ppb</div>
         </div>
-        <div className="aqi-box" >
+        <div className="aqi-box">
           <BsFillPeopleFill className="aqi-box-icon" />
           <div>People: {people}</div>
         </div>
