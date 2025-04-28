@@ -529,67 +529,253 @@
 
 // export default Dashboard;
 
-import React, { useState } from 'react';
-import './Dashboard.css';
-import logo from '../assets/Picture/Logo.png';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import Select from 'react-select';
+import React, { useState, useEffect } from "react";
+import "./Dashboard.css";
+import logo from "../assets/Picture/Logo.png";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import Select from "react-select";
+import axios from "axios";
+import { FaTemperatureHigh, FaWater } from "react-icons/fa";
+import { WiHumidity } from "react-icons/wi";
+import { ImMeter } from "react-icons/im";
+import { GiGasMask, GiChemicalDrop } from "react-icons/gi";
+import { MdCo2, MdOutlineAir } from "react-icons/md";
+import { BsFillPeopleFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+// เพิ่มฟังก์ชัน getAdviceByPrediction ลงใน Dashboard.jsx
+function getAdviceByPrediction(predictionLabel) {
+  switch (predictionLabel) {
+    case "Good":
+      return "คุณภาพอากาศอยู่ในเกณฑ์น่าพอใจและมีความเสียงเพียงเล็กน้อยหรือไม่มีเลย";
+    case "Moderate":
+      return "ผู้ที่อ่อนไหวควรหลีกเลียงกิจกรรมกลางแจ้ง เนื่องจากอาจมีอาการทางระบบทางเดินหายใจได้";
+    case "Unhealthy for Sensitive Groups":
+      return "โดยเฉพาะประชาชนทั่วไปและผู้ที่มีผิวแพ้ง่าย มีความเสียงที่จะเกิดอาการระคายเดืองและปัญหาเกี่ยวกับระบบทางเดินหายใจ";
+    case "Unhealthy":
+      return "เพิ่มความเสียงต่อการเกิดผลข้างเตียงและการระคายเคืองด่อหัวใจและปอดในประชาชนทั่วไป";
+    case "Very Unhealthy":
+      return "ประชาชนทั่วไปจะได้รับผลกระทบอย่างเห็นได้ชัด กลุ่มเสียงควรงดกิจกรรมกลางแจ้ง";
+    case "Hazardous":
+      return "ประชาชนทั่วไปมีความเสียงสูงที่จะเกิดอาการระคายเตืองและแลเสียต่อสุขภาพ ควรหลีกเลียงกิจกรรมกลางแจ้ง";
+    default:
+      return "ไม่สามารถประเมินได้";
+  }
+}
+
+// ฟังก์ชั่นสำหรับแปลงค่า AQI เป็น predictionLabel
+function getPredictionLabel(aqi) {
+  if (aqi >= 0 && aqi <= 50) {
+    return "Good";
+  } else if (aqi > 50 && aqi <= 100) {
+    return "Moderate";
+  } else if (aqi > 100 && aqi <= 150) {
+    return "Unhealthy for Sensitive Groups";
+  } else if (aqi > 150 && aqi <= 200) {
+    return "Unhealthy";
+  } else if (aqi > 200 && aqi <= 300) {
+    return "Very Unhealthy";
+  } else if (aqi > 300) {
+    return "Hazardous";
+  } else {
+    return "Unknown";
+  }
+}
 
 function Dashboard() {
-  // จำลองค่า AQI
-  const pm25 = 35;
-  const pm10 = 50;
-  const co = 3;
-  const o3 = 10;
-  const no2 = 15;
-  const so2 = 5;
-  const humidity = 60;
-  const temperature = 28;
+  const [airData, setAirData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [historicalData, setHistoricalData] = useState({});
+
+  // ดึงข้อมูลจาก API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.waqi.info/feed/bangkok/?token=e62239ceafdf907659ac6439e91fa256d07f9dda"
+        );
+        setAirData(response.data);
+
+        // สร้างข้อมูลประวัติย้อนหลัง (จำลอง)
+        // ในการใช้งานจริง คุณอาจต้องดึงข้อมูลประวัติย้อนหลังจาก API เพิ่มเติม
+        const now = new Date();
+        const historicalEntries = {};
+
+        const parameters = [
+          "pm25",
+          "pm10",
+          "o3",
+          "no2",
+          "so2",
+          "co",
+          "temperature",
+          "humidity",
+        ];
+        parameters.forEach((param) => {
+          const values = [];
+          const labels = [];
+
+          // สร้างข้อมูลย้อนหลัง 24 ชั่วโมง
+          for (let i = 23; i >= 0; i--) {
+            const time = new Date(now);
+            time.setHours(time.getHours() - i);
+            labels.push(time.getHours() + ":00");
+
+            // สร้างข้อมูลจำลองที่มีค่าใกล้เคียงกับค่าปัจจุบัน
+            let baseValue = 0;
+
+            if (param === "pm25" && response.data.data.iaqi.pm25) {
+              baseValue = response.data.data.iaqi.pm25.v;
+            } else if (param === "pm10" && response.data.data.iaqi.pm10) {
+              baseValue = response.data.data.iaqi.pm10.v;
+            } else if (param === "o3" && response.data.data.iaqi.o3) {
+              baseValue = response.data.data.iaqi.o3.v;
+            } else if (param === "no2" && response.data.data.iaqi.no2) {
+              baseValue = response.data.data.iaqi.no2.v;
+            } else if (param === "so2" && response.data.data.iaqi.so2) {
+              baseValue = response.data.data.iaqi.so2.v;
+            } else if (param === "co" && response.data.data.iaqi.co) {
+              baseValue = response.data.data.iaqi.co.v;
+            } else if (param === "temperature" && response.data.data.iaqi.t) {
+              baseValue = response.data.data.iaqi.t.v;
+            } else if (param === "humidity" && response.data.data.iaqi.h) {
+              baseValue = response.data.data.iaqi.h.v;
+            }
+
+            // สร้างความผันผวนเล็กน้อย
+            const randomFactor = 0.9 + Math.random() * 0.2; // 0.9 ถึง 1.1
+            values.push(Math.round(baseValue * randomFactor));
+          }
+
+          historicalEntries[param] = {
+            labels: labels,
+            values: values,
+          };
+        });
+
+        setHistoricalData(historicalEntries);
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+        console.error("Error fetching air quality data:", err);
+      }
+    };
+
+    fetchData();
+
+    // ดึงข้อมูลทุก 30 นาที
+    const interval = setInterval(fetchData, 30 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // ฟังก์ชั่นสำหรับตรวจสอบระดับ AQI
+  const getAqiQuality = (aqi) => {
+    if (aqi >= 0 && aqi <= 50) {
+      return "Good";
+    } else if (aqi > 50 && aqi <= 100) {
+      return "Moderate";
+    } else if (aqi > 100 && aqi <= 150) {
+      return "Poor";
+    } else if (aqi > 150 && aqi <= 200) {
+      return "Unhealthy";
+    } else if (aqi > 200 && aqi <= 300) {
+      return "Severe";
+    } else if (aqi > 300 && aqi <= 350) {
+      return "Hazardous";
+    } else {
+      return "Hazardous"; // ค่าเกิน 350
+    }
+  };
+
+  const getAqiColor = (aqi) => {
+    if (aqi >= 0 && aqi <= 50) {
+      return "#53FB72"; // เขียว
+    } else if (aqi > 50 && aqi <= 100) {
+      return "#ffeb3b"; // เหลือง
+    } else if (aqi > 100 && aqi <= 150) {
+      return "#ff9800"; // ส้ม
+    } else if (aqi > 150 && aqi <= 200) {
+      return "#f640d4"; // ชมพู
+    } else if (aqi > 200 && aqi <= 300) {
+      return "#9c27b0"; // ม่วง
+    } else if (aqi > 300 && aqi <= 350) {
+      return "#f44336"; // แดง
+    } else {
+      return "#f44336"; // แดง (ค่าเกิน 350)
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="dashboard-container">
+        <Sidebar />
+        <div className="main-content">
+          <div className="loading-container">
+            <h2>กำลังโหลดข้อมูลคุณภาพอากาศ...</h2>
+            <div className="loading-spinner"></div>
+          </div>
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="dashboard-container">
+        <Sidebar />
+        <div className="main-content">
+          <div className="error-container">
+            <h2>เกิดข้อผิดพลาดในการโหลดข้อมูล</h2>
+            <p>{error.message || "กรุณาลองใหม่อีกครั้ง"}</p>
+          </div>
+        </div>
+      </div>
+    );
+
+  // ดึงค่า AQI จาก API
+  const aqiValue = airData?.data?.aqi || 0;
+  const aqiQuality = getAqiQuality(aqiValue);
+
+  // ดึงค่าอื่นๆ จาก API
+  const pm25 = airData?.data?.iaqi?.pm25?.v || 0;
+  const pm10 = airData?.data?.iaqi?.pm10?.v || 0;
+  const o3 = airData?.data?.iaqi?.o3?.v || 0;
+  const no2 = airData?.data?.iaqi?.no2?.v || 0;
+  const so2 = airData?.data?.iaqi?.so2?.v || 0;
+  const co = airData?.data?.iaqi?.co?.v || 0;
+
+  // ข้อมูลเพิ่มเติม (ที่อาจมีหรือไม่มีใน API)
+  const temperature = airData?.data?.iaqi?.t?.v || 25;
+  const humidity = airData?.data?.iaqi?.h?.v || 60;
+
+  // ข้อมูลที่อาจไม่มีใน API (ใช้ค่าสมมติ)
   const pm1 = 10;
   const co2 = 400;
   const tvoc = 200;
   const people = 5;
 
-  // จำลองค่า AQI สำหรับ card
-  const aqiValue = 412;
-  const getAqiQuality = (aqi) => {
-    if (aqi >= 0 && aqi <= 50) {
-      return 'Good';
-    } else if (aqi > 50 && aqi <= 100) {
-      return 'Moderate';
-    } else if (aqi > 100 && aqi <= 150) {
-      return 'Poor';
-    } else if (aqi > 150 && aqi <= 200) {
-      return 'Unhealthy';
-    } else if (aqi > 200 && aqi <= 300) {
-      return 'Severe';
-    } else if (aqi > 300 && aqi <= 350) {
-      return 'Hazardous';
-    } else {
-      return 'Hazardous'; // ค่าเกิน 350
-    }
-  };
-  const aqiQuality = getAqiQuality(aqiValue);
-  const getAqiColor = (aqi) => {
-    if (aqi >= 0 && aqi <= 50) {
-      return '#53FB72'; // เขียว
-    } else if (aqi > 50 && aqi <= 100) {
-      return '#ffeb3b'; // เหลือง
-    } else if (aqi > 100 && aqi <= 150) {
-      return '#ff9800'; // ส้ม
-    } else if (aqi > 150 && aqi <= 200) {
-      return '#f640d4'; // ชมพู
-    } else if (aqi > 200 && aqi <= 300) {
-      return '#9c27b0'; // ม่วง
-    } else if (aqi > 300 && aqi <= 350) {
-      return '#f44336'; // แดง
-    } else {
-      return '#f44336'; // แดง (ค่าเกิน 350)
-    }
-  };
   return (
     <div className="dashboard-container">
       <Sidebar />
@@ -599,14 +785,31 @@ function Dashboard() {
           <div className="aqi-details">
             <div className="aqi-value-container">
               <span className="aqi-label">AQI แบบเรียลไทม์</span>
-              <span className="aqi-value" style={{ color: getAqiColor(aqiValue) }}>{aqiValue}</span>
+              <span
+                className="aqi-value"
+                style={{ color: getAqiColor(aqiValue) }}
+              >
+                {aqiValue}
+              </span>
             </div>
-            <div className="aqi-quality-container">
-              <span className="aqi-label">คุณภาพอากาศคือ</span>
-              <span className="aqi-quality" style={{ color: getAqiColor(aqiValue) }}>{aqiQuality}</span>
-              <span className="aqi-icon"></span> {/* ใช้ไอคอนแสดงอารมณ์ */}
+            <div className="aqi-prediction">
+            <div className="aqi-advice">
+              <h3>คำแนะนำ</h3>
+              <p>{getAdviceByPrediction(getPredictionLabel(aqiValue))}</p>
             </div>
           </div>
+            <div className="aqi-quality-container">
+              <span className="aqi-label">คุณภาพอากาศคือ</span>
+              <span
+                className="aqi-quality"
+                style={{ color: getAqiColor(aqiValue) }}
+              >
+                {aqiQuality}
+              </span>
+              <span className="aqi-icon"></span>
+            </div>
+          </div>
+          
           <div className="aqi-scale">
             <div className="aqi-scale-bar">
               <div className="aqi-scale-segment good">Good</div>
@@ -626,8 +829,16 @@ function Dashboard() {
               <span>350+</span>
             </div>
           </div>
+          <div className="aqi-station-info">
+            <p>สถานี: {airData?.data?.city?.name || "ไม่ระบุ"}</p>
+            <p>
+              อัพเดตล่าสุด:{" "}
+              {new Date(airData?.data?.time?.v * 1000).toLocaleString()}
+            </p>
+          </div>
         </div>
         <AQIDisplay
+          historicalData={historicalData}
           pm25={pm25}
           pm10={pm10}
           co={co}
@@ -647,20 +858,22 @@ function Dashboard() {
 }
 
 function Sidebar() {
+  const navigate = useNavigate();
   return (
-    <div className="sidebar">
+    <div className="sidebar1">
       <img src={logo} alt="Logo" className="sidebar-logo" />
-      <button>Home</button>
+      <button onClick={() => navigate("/home")}>Home</button>
       <div className="page">
         <button>Dashboards</button>
       </div>
-      <button>Profile</button>
-      <button>Settings</button>
+      <button onClick={() => navigate("/profile")}>Profile</button>
+      <button onClick={() => navigate("/setting")}>Settings</button>
     </div>
   );
 }
 
 function AQIDisplay({
+  historicalData,
   pm25,
   pm10,
   co,
@@ -674,41 +887,69 @@ function AQIDisplay({
   tvoc,
   people,
 }) {
-  const [selectedTemperature, setSelectedTemperature] = useState('temperature');
-  const [selectedHour, setSelectedHour] = useState('24');
+  const [selectedParameter, setSelectedParameter] = useState("pm25");
+  const [selectedHour, setSelectedHour] = useState("24");
 
-  const temperatureOptions = [
-    { value: 'temperature', label: 'อุณหภูมิ' },
-    { value: 'humidity', label: 'ความชื้น' },
-    { value: 'pm25', label: 'PM 2.5' },
-    { value: 'pm10', label: 'PM 10' },
-    { value: 'co', label: 'CO' },
-    { value: 'o3', label: 'O3' },
-    { value: 'no2', label: 'NO2' },
-    { value: 'so2', label: 'SO2' },
-    { value: 'pm1', label: 'PM 1' },
-    { value: 'co2', label: 'CO2' },
-    { value: 'tvoc', label: 'TVOC' },
-    { value: 'people', label: 'จำนวนคน' },
+  const parameterOptions = [
+    { value: "pm25", label: "PM 2.5" },
+    { value: "pm10", label: "PM 10" },
+    { value: "o3", label: "O3" },
+    { value: "no2", label: "NO2" },
+    { value: "so2", label: "SO2" },
+    { value: "co", label: "CO" },
+    { value: "temperature", label: "อุณหภูมิ" },
+    { value: "humidity", label: "ความชื้น" },
   ];
 
   const hourOptions = [
-    { value: '24', label: '24 ชั่วโมง' },
-    { value: '12', label: '12 ชั่วโมง' },
-    { value: '6', label: '6 ชั่วโมง' },
+    { value: "24", label: "24 ชั่วโมง" },
+    { value: "12", label: "12 ชั่วโมง" },
+    { value: "6", label: "6 ชั่วโมง" },
   ];
 
-  const data = {
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
-    datasets: [
-      {
-        label: temperatureOptions.find(option => option.value === selectedTemperature).label,
-        data: [temperature, humidity, pm25, pm10, temperature, humidity, pm25, pm10, temperature, humidity, pm25, pm10, temperature, humidity, pm25, pm10, temperature, humidity, pm25, pm10, temperature, humidity, pm25, pm10], // ตัวอย่างข้อมูล
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
+  // สร้างข้อมูลสำหรับกราฟ
+  const getChartData = () => {
+    if (!historicalData || !historicalData[selectedParameter]) {
+      return {
+        labels: Array(24).fill(""),
+        datasets: [
+          {
+            label:
+              parameterOptions.find(
+                (option) => option.value === selectedParameter
+              )?.label || selectedParameter,
+            data: Array(24).fill(0),
+            fill: false,
+            borderColor: "rgb(75, 192, 192)",
+            tension: 0.1,
+          },
+        ],
+      };
+    }
+
+    const hoursToShow = parseInt(selectedHour);
+    const labels = [...historicalData[selectedParameter].labels].slice(
+      -hoursToShow
+    );
+    const values = [...historicalData[selectedParameter].values].slice(
+      -hoursToShow
+    );
+
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label:
+            parameterOptions.find(
+              (option) => option.value === selectedParameter
+            )?.label || selectedParameter,
+          data: values,
+          fill: false,
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0.1,
+        },
+      ],
+    };
   };
 
   const options = {
@@ -725,34 +966,16 @@ function AQIDisplay({
   const selectStyles = {
     control: (provided) => ({
       ...provided,
-      color: 'black',
+      color: "black",
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: 'black',
+      color: "black",
     }),
     option: (provided) => ({
       ...provided,
-      color: 'black',
+      color: "black",
     }),
-  };
-
-  const getColor = (value) => {
-    if (value >= 0 && value <= 50) {
-      return '#53FB72'; // เขียว
-    } else if (value > 50 && value <= 100) {
-      return '#ffeb3b'; // เหลือง
-    } else if (value > 100 && value <= 150) {
-      return '#ff9800'; // ส้ม
-    } else if (value > 150 && value <= 200) {
-      return '#f640d4'; // ชมพู
-    } else if (value > 200 && value <= 300) {
-      return '#9c27b0'; // ม่วง
-    } else if (value > 300 && value <= 500) {
-      return '#f44336'; // แดง
-    } else {
-      return '#e0e0e0'; // สีเริ่มต้น
-    }
   };
 
   return (
@@ -761,48 +984,170 @@ function AQIDisplay({
         <h2 className="aqi-title">มลพิษทางอากาศหลัก</h2>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(pm25) }}>PM 2.5: {pm25} µg/m³</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(pm10) }}>PM 10: {pm10} µg/m³</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(co) }}>CO: {co} ppm</div>
+        <div className="aqi-box">
+          <GiGasMask className="aqi-box-icon" />
+          <div>PM 2.5: {pm25} µg/m³</div>
+        </div>
+        <div className="aqi-box">
+          <GiGasMask className="aqi-box-icon" />
+          <div>PM 10: {pm10} µg/m³</div>
+        </div>
+        <div className="aqi-box">
+          <MdOutlineAir className="aqi-box-icon" />
+          <div>CO: {co} ppm</div>
+        </div>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(o3) }}>O3: {o3} ppm</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(no2) }}>NO2: {no2} ppm</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(so2) }}>SO2: {so2} ppm</div>
+        <div className="aqi-box">
+          <GiChemicalDrop className="aqi-box-icon" />
+          <div>O3: {o3} ppm</div>
+        </div>
+        <div className="aqi-box">
+          <GiChemicalDrop className="aqi-box-icon" />
+          <div>NO2: {no2} ppm</div>
+        </div>
+        <div className="aqi-box">
+          <GiChemicalDrop className="aqi-box-icon" />
+          <div>SO2: {so2} ppm</div>
+        </div>
       </div>
       <div className="Header">
         <h2 className="aqi-title">มลพิษทางอากาศรอง</h2>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(humidity) }}>Humidity: {humidity} %</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(temperature) }}>Temperature: {temperature} °C</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(pm1) }}>PM 1: {pm1} µg/m³</div>
+        <div className="aqi-box">
+          <WiHumidity className="aqi-box-icon" />
+          <div>Humidity: {humidity} %</div>
+        </div>
+        <div className="aqi-box">
+          <FaTemperatureHigh className="aqi-box-icon" />
+          <div>Temperature: {temperature} °C</div>
+        </div>
+        <div className="aqi-box">
+          <GiGasMask className="aqi-box-icon" />
+          <div>PM 1: {pm1} µg/m³</div>
+        </div>
       </div>
       <div className="aqi-row">
-        <div className="aqi-box" style={{ backgroundColor: getColor(co2) }}>CO2: {co2} ppm</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(tvoc) }}>TVOC: {tvoc} ppb</div>
-        <div className="aqi-box" style={{ backgroundColor: getColor(people) }}>People: {people}</div>
+        <div className="aqi-box">
+          <MdCo2 className="aqi-box-icon" />
+          <div>CO2: {co2} ppm</div>
+        </div>
+        <div className="aqi-box">
+          <ImMeter className="aqi-box-icon" />
+          <div>TVOC: {tvoc} ppb</div>
+        </div>
+        <div className="aqi-box">
+          <BsFillPeopleFill className="aqi-box-icon" />
+          <div>People: {people}</div>
+        </div>
       </div>
       <div className="Header">
         <h2 className="aqi-title">กราฟแสดงข้อมูล</h2>
       </div>
       <div className="graph-controls">
         <Select
-          options={temperatureOptions}
-          defaultValue={temperatureOptions.find(option => option.value === selectedTemperature)}
-          onChange={selectedOption => setSelectedTemperature(selectedOption.value)}
+          options={parameterOptions}
+          value={parameterOptions.find(
+            (option) => option.value === selectedParameter
+          )}
+          onChange={(selectedOption) =>
+            setSelectedParameter(selectedOption.value)
+          }
           styles={selectStyles}
         />
         <Select
           options={hourOptions}
-          defaultValue={hourOptions.find(option => option.value === selectedHour)}
-          onChange={selectedOption => setSelectedHour(selectedOption.value)}
+          value={hourOptions.find((option) => option.value === selectedHour)}
+          onChange={(selectedOption) => setSelectedHour(selectedOption.value)}
           styles={selectStyles}
         />
       </div>
+
       <div className="chart-container">
-        <Line data={data} options={options} />
+        <Line data={getChartData()} options={options} />
       </div>
+
+      {/* เพิ่มตารางข้อมูลเกี่ยวกับระดับคุณภาพอากาศ */}
+      <AQIInfoTable />
+    </div>
+  );
+}
+
+// สร้าง Component ใหม่สำหรับตารางข้อมูลคุณภาพอากาศ
+function AQIInfoTable() {
+  return (
+    <div className="aqi-info-section">
+      <h3 className="aqi-info-title">เกี่ยวกับการตรวจวัดคุณภาพอากาศและมลพิษ</h3>
+      <h4 className="aqi-info-subtitle">เกี่ยวกับระดับคุณภาพอากาศ</h4>
+      <table className="aqi-info-table">
+        <thead>
+          <tr>
+            <th>ค่าดัชนีคุณภาพอากาศ (AQI)</th>
+            <th>ระดับ</th>
+            <th>ระดับความกังวลเรื่องสุขภาพ</th>
+            <th>คำแนะนำ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="good-level">
+            <td>0 - 50</td>
+            <td>ดี</td>
+            <td>
+              คุณภาพอากาศถือว่าเป็นที่น่าพอใจและมลพิษทางอากาศทำให้เกิดความเสี่ยงเพียงเล็กน้อยหรือไม่มีเลย
+            </td>
+            <td></td>
+          </tr>
+          <tr className="moderate-level">
+            <td>51 -100</td>
+            <td>ปานกลาง</td>
+            <td></td>
+            <td>
+              คุณภาพอากาศเป็นที่ยอมรับได้
+              อย่างไรก็ตามสำหรับการมลพิษบางอย่างอาจต้องระวังในกลุ่มผู้ไวฝุ่นละอองและสารเคมีได้ง่าย
+            </td>
+          </tr>
+          <tr className="poor-level">
+            <td>101-150</td>
+            <td>
+              ไม่ดีต่อสุขภาพ สำหรับ กลุ่มที่ไวต่อมลพิษทางอากาศ
+              หรือกลุ่มที่มีอาการง่าย
+            </td>
+            <td></td>
+            <td>
+              อาจมีผลกระทบต่อสุขภาพของประชาชนกลุ่มเสี่ยง
+              ส่วนประชาชนทั่วไปอาจไม่ได้รับผลกระทบ
+            </td>
+          </tr>
+          <tr className="unhealthy-level">
+            <td>151-200</td>
+            <td>มีผลกระทบต่อสุขภาพ</td>
+            <td>
+              ประชากรบางกลุ่มมีสิทธิ์ถึงผลกระทบต่อสุขภาพ
+              กลุ่มคนที่มีความเสี่ยงสูงอาจได้รับผลกระทบด้านสุขภาพที่รุนแรงขึ้น
+            </td>
+            <td></td>
+          </tr>
+          <tr className="severe-level">
+            <td>201-300</td>
+            <td>อันตรายต่อสุขภาพเป็นอย่างมาก</td>
+            <td>
+              คำเตือนด้านสุขภาพในภาวะฉุกเฉิน
+              ประชากรทั้งหมดมีแนวโน้มที่จะได้รับผลกระทบมากขึ้น
+            </td>
+            <td></td>
+          </tr>
+          <tr className="hazardous-level">
+            <td>300+</td>
+            <td>เสี่ยงอันตราย</td>
+            <td>
+              การแจ้งเตือนด้านสุขภาพ:
+              ทุกคนอาจได้รับผลกระทบด้านสุขภาพที่รุนแรงขึ้น
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
